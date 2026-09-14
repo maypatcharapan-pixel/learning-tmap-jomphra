@@ -1,0 +1,994 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1">
+
+  <title>
+    Learning T-Map จอมพระ | ปักหมุดแหล่งเรียนรู้คู่ชุมชน
+  </title>
+
+  <meta name="description"
+        content="Learning T-Map จอมพระ แผนที่แหล่งเรียนรู้ชุมชน อำเภอจอมพระ จังหวัดสุรินทร์">
+
+  <!-- Google Font -->
+  <link rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+  <link rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+  <!-- Leaflet -->
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <!-- Main CSS -->
+  <link rel="stylesheet"
+        href="/style.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="site-header">
+
+  <div class="header-inner">
+
+    <a href="/" class="brand">
+
+      <div class="logo">
+        T
+      </div>
+
+      <div class="brand-text">
+
+        <strong>
+          Learning T-Map จอมพระ
+        </strong>
+
+        <span>
+          ปักหมุดแหล่งเรียนรู้คู่ชุมชน
+        </span>
+
+      </div>
+
+    </a>
+
+
+    <nav class="main-nav">
+
+      <a href="#explore">
+        สำรวจแหล่งเรียนรู้
+      </a>
+
+      <a href="#map-section">
+        แผนที่
+      </a>
+
+      <a href="#categories">
+        หมวดหมู่
+      </a>
+
+      <a href="/admin.html"
+         class="admin-link">
+        ⚙ จัดการข้อมูล
+      </a>
+
+    </nav>
+
+  </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     HERO
+===================================================== -->
+
+<section class="hero">
+
+  <div class="hero-bg"></div>
+
+
+  <div class="hero-inner">
+
+
+    <div class="hero-content">
+
+      <div class="eyebrow">
+        COMMUNITY LEARNING MAP
+      </div>
+
+
+      <h1>
+
+        Learning T-Map จอมพระ
+
+        <span>
+          ปักหมุดแหล่งเรียนรู้คู่ชุมชน
+        </span>
+
+      </h1>
+
+
+      <p class="hero-description">
+
+        ค้นหา สำรวจ และเรียนรู้แหล่งเรียนรู้ในพื้นที่
+        อำเภอจอมพระ จังหวัดสุรินทร์
+
+      </p>
+
+
+      <p class="hero-tagline">
+
+        ทุกพื้นที่คือห้องเรียน
+
+        <strong>
+          ทุกชุมชนคือแหล่งเรียนรู้
+        </strong>
+
+      </p>
+
+
+      <div class="hero-actions">
+
+        <a href="#explore"
+           class="btn btn-primary">
+          🗺️ สำรวจแหล่งเรียนรู้
+        </a>
+
+
+        <a href="#map-section"
+           class="btn btn-light">
+          📍 ดูแผนที่
+        </a>
+
+
+        <a href="/admin.html"
+           class="btn btn-outline">
+          ➕ เพิ่มแหล่งเรียนรู้
+        </a>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="hero-visual">
+
+      <div class="hero-map-card">
+
+        <div class="map-decoration map-pin pin-1">
+          📍
+        </div>
+
+        <div class="map-decoration map-pin pin-2">
+          📍
+        </div>
+
+        <div class="map-decoration map-pin pin-3">
+          📍
+        </div>
+
+        <div class="map-lines"></div>
+
+
+        <div class="hero-map-center">
+
+          <div class="hero-map-icon">
+            🗺️
+          </div>
+
+          <strong>
+            Learning<br>
+            T-Map
+          </strong>
+
+          <small>
+            จอมพระ
+          </small>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main>
+
+
+
+<!-- =====================================================
+     SEARCH
+===================================================== -->
+
+<section id="explore"
+         class="search-section">
+
+
+  <div class="section-heading center">
+
+    <div class="eyebrow">
+      EXPLORE LEARNING PLACES
+    </div>
+
+
+    <h2>
+      ค้นหาแหล่งเรียนรู้
+    </h2>
+
+
+    <p>
+      ค้นพบแหล่งเรียนรู้ที่น่าสนใจในชุมชนของคุณ
+    </p>
+
+  </div>
+
+
+
+  <div class="search-box">
+
+
+    <div class="search-input-wrap">
+
+      <span class="search-icon">
+        🔍
+      </span>
+
+
+      <input
+        id="q"
+        type="search"
+        placeholder="ค้นหา เช่น ศูนย์การเรียนรู้ ปราชญ์ชาวบ้าน แหล่งท่องเที่ยว..."
+        autocomplete="off"
+      >
+
+    </div>
+
+
+
+    <select id="district">
+
+      <option value="">
+        ทุกตำบล
+      </option>
+
+    </select>
+
+
+
+    <select id="category">
+
+      <option value="">
+        ทุกประเภท
+      </option>
+
+    </select>
+
+
+
+    <button id="clear"
+            class="clear-btn"
+            type="button">
+
+      ↻ ล้างตัวกรอง
+
+    </button>
+
+  </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     STATISTICS
+===================================================== -->
+
+<section class="stats-section">
+
+  <div class="stats-grid">
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon blue">
+        📍
+      </div>
+
+      <div>
+
+        <strong id="statPlaces">
+          0
+        </strong>
+
+        <span>
+          แหล่งเรียนรู้ทั้งหมด
+        </span>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon green">
+        🏘️
+      </div>
+
+      <div>
+
+        <strong id="statDistricts">
+          0
+        </strong>
+
+        <span>
+          ตำบล
+        </span>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon orange">
+        📚
+      </div>
+
+      <div>
+
+        <strong id="statCategories">
+          0
+        </strong>
+
+        <span>
+          ประเภทแหล่งเรียนรู้
+        </span>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="stat-card">
+
+      <div class="stat-icon purple">
+        🗺️
+      </div>
+
+      <div>
+
+        <strong id="statMap">
+          0
+        </strong>
+
+        <span>
+          จุดบนแผนที่
+        </span>
+
+      </div>
+
+    </div>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     CATEGORIES
+===================================================== -->
+
+<section id="categories"
+         class="categories-section">
+
+
+  <div class="section-heading">
+
+    <div>
+
+      <div class="eyebrow">
+        LEARNING CATEGORIES
+      </div>
+
+
+      <h2>
+        หมวดหมู่แหล่งเรียนรู้
+      </h2>
+
+
+      <p>
+        เลือกหมวดหมู่เพื่อค้นหาแหล่งเรียนรู้ที่สนใจ
+      </p>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="category-grid">
+
+
+    <button class="category-card"
+            data-category="การศึกษา"
+            type="button">
+
+      <span class="category-icon">
+        📚
+      </span>
+
+      <strong>
+        การศึกษา
+      </strong>
+
+      <small>
+        การเรียนรู้และการศึกษา
+      </small>
+
+    </button>
+
+
+
+    <button class="category-card"
+            data-category="เกษตร"
+            type="button">
+
+      <span class="category-icon">
+        🌱
+      </span>
+
+      <strong>
+        เกษตรและเศรษฐกิจพอเพียง
+      </strong>
+
+      <small>
+        เกษตร ภูมิปัญญา และอาชีพ
+      </small>
+
+    </button>
+
+
+
+    <button class="category-card"
+            data-category="ศิลปวัฒนธรรม"
+            type="button">
+
+      <span class="category-icon">
+        🏛️
+      </span>
+
+      <strong>
+        ศิลปวัฒนธรรม
+      </strong>
+
+      <small>
+        ศิลปะ ประเพณี และวัฒนธรรม
+      </small>
+
+    </button>
+
+
+
+    <button class="category-card"
+            data-category="ภูมิปัญญาท้องถิ่น"
+            type="button">
+
+      <span class="category-icon">
+        👨‍🌾
+      </span>
+
+      <strong>
+        ภูมิปัญญาท้องถิ่น
+      </strong>
+
+      <small>
+        องค์ความรู้จากชุมชน
+      </small>
+
+    </button>
+
+
+
+    <button class="category-card"
+            data-category="ชุมชน"
+            type="button">
+
+      <span class="category-icon">
+        🏘️
+      </span>
+
+      <strong>
+        ชุมชน
+      </strong>
+
+      <small>
+        พื้นที่เรียนรู้ของชุมชน
+      </small>
+
+    </button>
+
+
+
+    <button class="category-card"
+            data-category="ท่องเที่ยว"
+            type="button">
+
+      <span class="category-icon">
+        🏞️
+      </span>
+
+      <strong>
+        แหล่งท่องเที่ยว
+      </strong>
+
+      <small>
+        ท่องเที่ยว เรียนรู้ และสัมผัสชุมชน
+      </small>
+
+    </button>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     MAP
+===================================================== -->
+
+<section id="map-section"
+         class="map-section">
+
+
+  <div class="map-section-heading">
+
+
+    <div>
+
+      <div class="eyebrow">
+        INTERACTIVE LEARNING MAP
+      </div>
+
+
+      <h2>
+        สำรวจแหล่งเรียนรู้บนแผนที่
+      </h2>
+
+
+      <p>
+        คลิกหมุดบนแผนที่เพื่อดูรายละเอียดแต่ละแหล่งเรียนรู้
+      </p>
+
+    </div>
+
+
+    <div id="resultCount"
+         class="result-count">
+
+      พบ 0 แหล่งเรียนรู้
+
+    </div>
+
+  </div>
+
+
+
+  <div class="map-layout">
+
+
+    <div class="map-wrapper">
+
+      <div id="map"></div>
+
+
+      <div class="map-overlay">
+
+        <span>
+          📍 Learning T-Map
+        </span>
+
+      </div>
+
+    </div>
+
+
+
+    <aside class="places-panel">
+
+
+      <div class="panel-header">
+
+        <div>
+
+          <strong>
+            แหล่งเรียนรู้
+          </strong>
+
+          <small>
+            รายการที่ค้นพบ
+          </small>
+
+        </div>
+
+
+        <span id="panelCount">
+          0
+        </span>
+
+      </div>
+
+
+      <div id="cards"
+           class="cards">
+      </div>
+
+
+    </aside>
+
+
+  </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     INFORMATION
+===================================================== -->
+
+<section class="info-section">
+
+
+  <div class="info-card">
+
+
+    <div class="info-icon">
+      💡
+    </div>
+
+
+    <div>
+
+      <div class="eyebrow">
+        LEARNING FOR EVERYONE
+      </div>
+
+
+      <h2>
+        เรียนรู้ได้ทุกที่ ทุกเวลา
+      </h2>
+
+
+      <p>
+
+        Learning T-Map จอมพระ
+        รวบรวมแหล่งเรียนรู้ในชุมชน
+        เพื่อส่งเสริมการเรียนรู้ตลอดชีวิต
+        และเปิดโอกาสให้ทุกคนเข้าถึงองค์ความรู้
+        ใกล้ตัวได้ง่ายยิ่งขึ้น
+
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+===================================================== -->
+
+<footer class="site-footer">
+
+
+  <div class="footer-inner">
+
+
+    <div class="footer-brand">
+
+
+      <div class="footer-logo">
+        T
+      </div>
+
+
+      <div>
+
+        <strong>
+          Learning T-Map จอมพระ
+        </strong>
+
+        <p>
+          ปักหมุดแหล่งเรียนรู้คู่ชุมชน
+        </p>
+
+      </div>
+
+    </div>
+
+
+
+    <div class="footer-info">
+
+      <strong>
+        สกร.ระดับอำเภอจอมพระ จังหวัดสุรินทร์
+      </strong>
+
+      <span>
+        ทุกพื้นที่คือห้องเรียน ทุกชุมชนคือแหล่งเรียนรู้
+      </span>
+
+    </div>
+
+
+  </div>
+
+
+
+  <div class="footer-bottom">
+
+    © 2026 Learning T-Map จอมพระ
+
+  </div>
+
+
+</footer>
+
+
+
+<!-- =====================================================
+     DETAIL MODAL
+===================================================== -->
+
+<div id="detailModal"
+     class="detail-modal">
+
+
+  <div class="detail-box">
+
+
+    <button id="detailClose"
+            class="detail-close"
+            type="button"
+            aria-label="ปิด">
+
+      ×
+
+    </button>
+
+
+
+    <div id="detailImageWrap"
+         class="detail-image-wrap">
+
+      <img id="detailImage"
+           src=""
+           alt="">
+
+    </div>
+
+
+
+    <div class="detail-content">
+
+
+      <div id="detailCategory"
+           class="detail-category">
+      </div>
+
+
+      <h2 id="detailName"></h2>
+
+
+      <p id="detailDescription"
+         class="detail-description">
+      </p>
+
+
+
+      <div class="detail-info">
+
+
+        <div class="detail-row">
+
+          <span>
+            📍
+          </span>
+
+          <div>
+
+            <small>
+              สถานที่
+            </small>
+
+            <strong id="detailLocation">
+              -
+            </strong>
+
+          </div>
+
+        </div>
+
+
+
+        <div class="detail-row">
+
+          <span>
+            👤
+          </span>
+
+          <div>
+
+            <small>
+              ผู้รับผิดชอบ / ผู้ติดต่อ
+            </small>
+
+            <strong id="detailContact">
+              -
+            </strong>
+
+          </div>
+
+        </div>
+
+
+
+        <div class="detail-row">
+
+          <span>
+            📞
+          </span>
+
+          <div>
+
+            <small>
+              โทรศัพท์
+            </small>
+
+            <strong id="detailPhone">
+              -
+            </strong>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+
+      <div class="detail-actions">
+
+
+        <a id="detailMaps"
+           class="detail-btn primary"
+           href="#"
+           target="_blank"
+           rel="noopener">
+
+          🗺️ นำทาง Google Maps
+
+        </a>
+
+
+
+        <button id="detailMap"
+                class="detail-btn secondary"
+                type="button">
+
+          📍 ดูบนแผนที่
+
+        </button>
+
+
+
+        <button id="detailShare"
+                class="detail-btn secondary"
+                type="button">
+
+          🔗 แชร์สถานที่
+
+        </button>
+
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     QR MODAL
+===================================================== -->
+
+<div id="qrModal"
+     class="qr-modal">
+
+
+  <div class="qr-modal-box">
+
+
+    <button id="closeQRModal"
+            class="qr-close"
+            type="button">
+
+      ×
+
+    </button>
+
+
+    <div id="qrModalContent"></div>
+
+
+  </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     SCRIPTS
+===================================================== -->
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script src="/app.js"></script>
+
+
+</body>
+
+</html>

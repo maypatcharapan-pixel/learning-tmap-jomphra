@@ -1,0 +1,727 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>จัดการข้อมูล Learning T-Map จอมพระ</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- Leaflet -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  >
+
+  <!-- Admin CSS -->
+  <link rel="stylesheet" href="/admin.css">
+</head>
+
+<body class="admin-body">
+
+  <!-- =====================================================
+       SIDEBAR
+  ====================================================== -->
+  <aside class="admin-sidebar">
+
+    <div class="admin-sidebar-brand">
+
+      <div class="admin-logo">T</div>
+
+      <div class="admin-brand-text">
+        <strong>Learning T-Map</strong>
+        <span>จอมพระ</span>
+      </div>
+
+    </div>
+
+    <nav class="admin-menu">
+
+      <a href="#dashboard" class="admin-menu-item active">
+        <span class="menu-icon">▦</span>
+        <span>แดชบอร์ด</span>
+      </a>
+
+      <a href="#formSection" class="admin-menu-item">
+        <span class="menu-icon">＋</span>
+        <span>เพิ่มแหล่งเรียนรู้</span>
+      </a>
+
+      <a href="#dataSection" class="admin-menu-item">
+        <span class="menu-icon">☷</span>
+        <span>จัดการข้อมูล</span>
+      </a>
+
+      <a href="/api/export" class="admin-menu-item">
+        <span class="menu-icon">⇩</span>
+        <span>ส่งออกข้อมูล</span>
+      </a>
+
+      <div class="admin-menu-divider"></div>
+
+      <a href="/" class="admin-menu-item">
+        <span class="menu-icon">⌂</span>
+        <span>กลับหน้าเว็บไซต์</span>
+      </a>
+
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <span class="status-dot"></span>
+      ระบบพร้อมใช้งาน
+    </div>
+
+  </aside>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+  <main class="admin-main">
+
+    <!-- TOPBAR -->
+    <header class="admin-topbar">
+
+      <div class="admin-mobile-brand">
+
+        <div class="admin-logo small">T</div>
+
+        <strong>Learning T-Map</strong>
+
+      </div>
+
+      <div class="admin-system-status">
+        <span class="status-dot"></span>
+        ระบบจัดการข้อมูล
+      </div>
+
+      <a href="/" class="admin-view-site">
+        ดูเว็บไซต์ →
+      </a>
+
+    </header>
+
+
+    <!-- ===================================================
+         DASHBOARD
+    ==================================================== -->
+    <section id="dashboard" class="adminpage">
+
+      <div class="admin-hero-v2">
+
+        <div class="admin-hero-content">
+
+          <span class="admin-eyebrow">
+            LEARNING T-MAP · ADMIN
+          </span>
+
+          <h1>
+            ศูนย์จัดการข้อมูลแหล่งเรียนรู้
+          </h1>
+
+          <p>
+            จัดการ เพิ่ม แก้ไข และตรวจสอบข้อมูลแหล่งเรียนรู้
+            ในระบบ Learning T-Map อำเภอจอมพระ
+          </p>
+
+        </div>
+
+        <div class="admin-hero-card">
+
+          <span>ข้อมูลล่าสุด</span>
+
+          <strong id="lastUpdated">
+            กำลังโหลด...
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- STATS -->
+      <div id="dashboardStats" class="admin-stats-v2">
+
+        <div class="admin-loading-card">
+          กำลังโหลดข้อมูล...
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         FORM
+    ==================================================== -->
+    <section id="formSection" class="adminpage">
+
+      <div class="admin-section-heading">
+
+        <div>
+
+          <span class="admin-eyebrow">
+            DATA MANAGEMENT
+          </span>
+
+          <h2 id="formTitle">
+            เพิ่มแหล่งเรียนรู้
+          </h2>
+
+          <p>
+            กรอกข้อมูลแหล่งเรียนรู้และเลือกตำแหน่งบนแผนที่
+          </p>
+
+        </div>
+
+        <span id="editBadge" class="edit-badge">
+          เพิ่มข้อมูลใหม่
+        </span>
+
+      </div>
+
+
+      <div class="admin-grid-v2">
+
+        <!-- =================================================
+             FORM CARD
+        ================================================== -->
+        <div class="form-card-v2">
+
+          <form id="form">
+
+            <input type="hidden" id="id">
+            <input type="hidden" id="oldImage">
+
+
+            <!-- BASIC INFORMATION -->
+            <div class="form-section-title">
+
+              <span>01</span>
+
+              ข้อมูลพื้นฐาน
+
+            </div>
+
+
+            <div class="admin-grid-v2-fields">
+
+
+              <!-- NAME -->
+              <div class="field-full">
+
+                <label for="name">
+                  ชื่อแหล่งเรียนรู้
+                  <span>*</span>
+                </label>
+
+                <input
+                  type="text"
+                  id="name"
+                  placeholder="เช่น ศูนย์การเรียนรู้ชุมชน..."
+                  required
+                >
+
+              </div>
+
+
+              <!-- DISTRICT -->
+              <div>
+
+                <label for="district">
+                  ตำบล
+                  <span>*</span>
+                </label>
+
+                <input
+                  type="text"
+                  id="district"
+                  placeholder="ชื่อตำบล"
+                  required
+                >
+
+              </div>
+
+
+              <!-- CATEGORY -->
+              <div>
+
+                <label for="category">
+                  ประเภทแหล่งเรียนรู้
+                  <span>*</span>
+                </label>
+
+                <input
+                  type="text"
+                  id="category"
+                  list="categoryList"
+                  placeholder="เลือกหรือพิมพ์ประเภท"
+                  required
+                >
+
+                <datalist id="categoryList"></datalist>
+
+              </div>
+
+
+              <!-- DESCRIPTION -->
+              <div class="field-full">
+
+                <label for="description">
+                  รายละเอียด
+                </label>
+
+                <textarea
+                  id="description"
+                  rows="5"
+                  placeholder="รายละเอียดเกี่ยวกับแหล่งเรียนรู้"
+                ></textarea>
+
+              </div>
+
+
+              <!-- VILLAGE -->
+              <div>
+
+                <label for="village">
+                  หมู่บ้าน
+                </label>
+
+                <input
+                  type="text"
+                  id="village"
+                  placeholder="ชื่อหมู่บ้าน"
+                >
+
+              </div>
+
+
+              <!-- CONTACT -->
+              <div>
+
+                <label for="contactName">
+                  ผู้ติดต่อ
+                </label>
+
+                <input
+                  type="text"
+                  id="contactName"
+                  placeholder="ชื่อผู้ติดต่อ"
+                >
+
+              </div>
+
+
+              <!-- PHONE -->
+              <div>
+
+                <label for="phone">
+                  เบอร์โทรศัพท์
+                </label>
+
+                <input
+                  type="text"
+                  id="phone"
+                  placeholder="0xx-xxx-xxxx"
+                >
+
+              </div>
+
+
+              <!-- MAPS URL -->
+              <div>
+
+                <label for="mapsUrl">
+                  Google Maps URL
+                </label>
+
+                <input
+                  type="url"
+                  id="mapsUrl"
+                  placeholder="https://maps.google.com..."
+                >
+
+              </div>
+
+            </div>
+
+
+            <!-- LOCATION -->
+            <div class="form-section-title location-title">
+
+              <span>02</span>
+
+              ตำแหน่งบนแผนที่
+
+            </div>
+
+
+            <div class="location-box-v2">
+
+              <div class="location-head">
+
+                <div>
+
+                  <strong>
+                    เลือกตำแหน่งแหล่งเรียนรู้
+                  </strong>
+
+                  <p>
+                    คลิกบนแผนที่ หรือลากหมุดเพื่อกำหนดพิกัด
+                  </p>
+
+                </div>
+
+                <div
+                  id="coordStatus"
+                  class="coord-status"
+                >
+                  ยังไม่ได้เลือกตำแหน่ง
+                </div>
+
+              </div>
+
+
+              <div id="pickMap"></div>
+
+
+              <div class="grid2">
+
+                <div>
+
+                  <label for="lat">
+                    Latitude
+                  </label>
+
+                  <input
+                    type="number"
+                    step="any"
+                    id="lat"
+                    placeholder="15.xxxxxx"
+                  >
+
+                </div>
+
+
+                <div>
+
+                  <label for="lng">
+                    Longitude
+                  </label>
+
+                  <input
+                    type="number"
+                    step="any"
+                    id="lng"
+                    placeholder="103.xxxxxx"
+                  >
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+            <!-- IMAGE -->
+            <div class="form-section-title">
+
+              <span>03</span>
+
+              ภาพแหล่งเรียนรู้
+
+            </div>
+
+
+            <div class="image-upload-box">
+
+              <label
+                for="image"
+                class="image-upload-label"
+              >
+
+                <span class="upload-icon">
+                  ＋
+                </span>
+
+                <strong>
+                  เลือกรูปภาพ
+                </strong>
+
+                <small>
+                  รองรับ JPG, PNG และ WebP
+                </small>
+
+              </label>
+
+
+              <input
+                type="file"
+                id="image"
+                accept="image/jpeg,image/png,image/webp"
+              >
+
+
+              <div
+                id="imagePreview"
+                class="image-preview"
+              ></div>
+
+            </div>
+
+
+            <!-- ACTION -->
+            <div class="actions-v2">
+
+              <button
+                type="submit"
+                class="save-btn"
+              >
+
+                <span>✓</span>
+
+                <span id="saveText">
+                  บันทึกข้อมูล
+                </span>
+
+              </button>
+
+
+              <button
+                type="button"
+                id="reset"
+                class="secondary"
+              >
+                ล้างฟอร์ม
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+
+        <!-- =================================================
+             GUIDE
+        ================================================== -->
+        <aside class="tips-card-v2">
+
+          <div class="guide-header">
+
+            <span class="guide-icon">
+              i
+            </span>
+
+            <div>
+
+              <strong>
+                คำแนะนำ
+              </strong>
+
+              <small>
+                การเพิ่มข้อมูล
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <div class="guide-step">
+
+            <b>01</b>
+
+            <div>
+
+              <strong>
+                กรอกข้อมูลพื้นฐาน
+              </strong>
+
+              <p>
+                ชื่อ ตำบล ประเภท
+                และรายละเอียดของแหล่งเรียนรู้
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="guide-step">
+
+            <b>02</b>
+
+            <div>
+
+              <strong>
+                กำหนดตำแหน่ง
+              </strong>
+
+              <p>
+                คลิกตำแหน่งบนแผนที่
+                หรือลากหมุดไปยังตำแหน่งที่ถูกต้อง
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="guide-step">
+
+            <b>03</b>
+
+            <div>
+
+              <strong>
+                เพิ่มรูปภาพ
+              </strong>
+
+              <p>
+                ใช้ภาพที่ชัดเจนและสื่อถึงแหล่งเรียนรู้
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="guide-important">
+
+            <strong>
+              เคล็ดลับ
+            </strong>
+
+            <p>
+              ข้อมูลพิกัดที่ถูกต้องจะช่วยให้ผู้ใช้งาน
+              ค้นหาและเดินทางไปยังแหล่งเรียนรู้ได้ง่ายขึ้น
+            </p>
+
+          </div>
+
+        </aside>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         DATA
+    ==================================================== -->
+    <section id="dataSection" class="adminpage">
+
+      <div class="section-title-v2">
+
+        <div>
+
+          <span class="admin-eyebrow">
+            DATABASE
+          </span>
+
+          <h2>
+            ข้อมูลแหล่งเรียนรู้
+          </h2>
+
+          <p id="dataSummary">
+            กำลังโหลดข้อมูล...
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- SEARCH / FILTER -->
+      <div class="list-tools-v2">
+
+        <div class="search-box">
+
+          <span>⌕</span>
+
+          <input
+            type="search"
+            id="adminSearch"
+            placeholder="ค้นหาชื่อ ตำบล หมู่บ้าน หรือประเภท..."
+          >
+
+        </div>
+
+
+        <select id="filterDistrict">
+
+          <option value="">
+            ทุกตำบล
+          </option>
+
+        </select>
+
+
+        <select id="filterCategory">
+
+          <option value="">
+            ทุกประเภท
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- DATA LIST -->
+      <div
+        id="list"
+        class="admin-data-list"
+      >
+
+        <div class="admin-empty">
+          กำลังโหลดข้อมูล...
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =====================================================
+       TOAST
+  ====================================================== -->
+  <div
+    id="toast"
+    class="toast"
+  ></div>
+
+
+  <!-- =====================================================
+       LEAFLET
+  ====================================================== -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  ></script>
+
+
+  <!-- =====================================================
+       QR CODE
+  ====================================================== -->
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+  ></script>
+
+
+  <!-- =====================================================
+       ADMIN JS
+  ====================================================== -->
+  <script src="/admin.js"></script>
+
+</body>
+</html>
