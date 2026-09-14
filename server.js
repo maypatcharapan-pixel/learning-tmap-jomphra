@@ -1,6 +1,6 @@
 /* =========================================================
    LEARNING T-MAP จอมพระ
-   SERVER V3 - SAFE DATA VERSION
+   SERVER V4 - RENDER / ROOT FRONTEND VERSION
    ========================================================= */
 
 const express = require("express");
@@ -10,38 +10,88 @@ const fs = require("fs");
 const multer = require("multer");
 
 const app = express();
+
+/* =========================================================
+   PORT
+   ========================================================= */
+
 const PORT = process.env.PORT || 3000;
 
+/* =========================================================
+   PATHS
+   ========================================================= */
+
 const ROOT = __dirname;
-const DATA_DIR = path.join(ROOT, "data");
-const UPLOAD_DIR = path.join(ROOT, "uploads");
-const DB_FILE = path.join(DATA_DIR, "places.json");
-const BACKUP_DIR = path.join(DATA_DIR, "backup");
+
+const DATA_DIR = path.join(
+  ROOT,
+  "data"
+);
+
+const UPLOAD_DIR = path.join(
+  ROOT,
+  "uploads"
+);
+
+const DB_FILE = path.join(
+  DATA_DIR,
+  "places.json"
+);
+
+const BACKUP_DIR = path.join(
+  DATA_DIR,
+  "backup"
+);
 
 /* =========================================================
    CREATE DIRECTORIES
    ========================================================= */
 
-for (const dir of [DATA_DIR, UPLOAD_DIR, BACKUP_DIR]) {
-  fs.mkdirSync(dir, { recursive: true });
+for (const dir of [
+  DATA_DIR,
+  UPLOAD_DIR,
+  BACKUP_DIR
+]) {
+  fs.mkdirSync(
+    dir,
+    {
+      recursive: true
+    }
+  );
 }
 
 /* =========================================================
-   IMPORTANT
-   - NEVER create demo data
-   - NEVER overwrite existing places.json
+   DATABASE
    ========================================================= */
 
+/*
+  IMPORTANT
+
+  - ไม่สร้างข้อมูลตัวอย่าง
+  - ไม่เขียนทับ places.json เดิม
+  - ถ้าไม่มีไฟล์ ให้สร้างเป็น []
+*/
+
 function ensureDatabase() {
-  if (!fs.existsSync(DB_FILE)) {
+
+  if (
+    !fs.existsSync(
+      DB_FILE
+    )
+  ) {
+
     fs.writeFileSync(
       DB_FILE,
       "[]",
       "utf8"
     );
 
-    console.log("สร้าง places.json ใหม่เป็นข้อมูลว่าง");
+    console.log(
+      "สร้าง places.json ใหม่เป็นข้อมูลว่าง"
+    );
+
   }
+
 }
 
 ensureDatabase();
@@ -51,18 +101,38 @@ ensureDatabase();
    ========================================================= */
 
 function readDatabase() {
-  try {
-    const raw = fs.readFileSync(DB_FILE, "utf8");
 
-    if (!raw.trim()) {
+  try {
+
+    const raw =
+      fs.readFileSync(
+        DB_FILE,
+        "utf8"
+      );
+
+    if (
+      !raw.trim()
+    ) {
       return [];
     }
 
-    const data = JSON.parse(raw);
+    const data =
+      JSON.parse(
+        raw
+      );
 
-    if (!Array.isArray(data)) {
-      console.error("places.json ต้องเป็น Array");
+    if (
+      !Array.isArray(
+        data
+      )
+    ) {
+
+      console.error(
+        "places.json ต้องเป็น Array"
+      );
+
       return [];
+
     }
 
     return data;
@@ -75,7 +145,9 @@ function readDatabase() {
     );
 
     return [];
+
   }
+
 }
 
 /* =========================================================
@@ -84,7 +156,11 @@ function readDatabase() {
 
 function backupDatabase() {
 
-  if (!fs.existsSync(DB_FILE)) {
+  if (
+    !fs.existsSync(
+      DB_FILE
+    )
+  ) {
     return;
   }
 
@@ -93,7 +169,10 @@ function backupDatabase() {
     const timestamp =
       new Date()
         .toISOString()
-        .replace(/[:.]/g, "-");
+        .replace(
+          /[:.]/g,
+          "-"
+        );
 
     const backupFile =
       path.join(
@@ -118,21 +197,30 @@ function backupDatabase() {
     );
 
   }
+
 }
 
 /* =========================================================
    WRITE DATABASE SAFELY
    ========================================================= */
 
-function writeDatabase(data) {
+function writeDatabase(
+  data
+) {
 
-  if (!Array.isArray(data)) {
+  if (
+    !Array.isArray(
+      data
+    )
+  ) {
+
     throw new Error(
       "ข้อมูลที่จะบันทึกต้องเป็น Array"
     );
+
   }
 
-  /* สำรองก่อนเขียนทุกครั้ง */
+  /* สำรองข้อมูลก่อนเขียน */
   backupDatabase();
 
   const tempFile =
@@ -156,38 +244,52 @@ function writeDatabase(data) {
   console.log(
     `บันทึกข้อมูลแล้ว ${data.length} รายการ`
   );
+
 }
 
 /* =========================================================
    HELPERS
    ========================================================= */
 
-function clean(value) {
+function clean(
+  value
+) {
+
   return String(
     value ?? ""
   ).trim();
+
 }
 
-function toNumberOrNull(value) {
+function toNumberOrNull(
+  value
+) {
 
   if (
     value === "" ||
     value === null ||
     value === undefined
   ) {
+
     return null;
+
   }
 
   const number =
-    Number(value);
+    Number(
+      value
+    );
 
-  return Number.isFinite(number)
+  return Number.isFinite(
+    number
+  )
     ? number
     : null;
+
 }
 
 /* =========================================================
-   MULTER
+   MULTER - IMAGE UPLOAD
    ========================================================= */
 
 const storage =
@@ -195,10 +297,12 @@ const storage =
 
     destination:
       (req, file, cb) => {
+
         cb(
           null,
           UPLOAD_DIR
         );
+
       },
 
     filename:
@@ -218,6 +322,7 @@ const storage =
           null,
           filename
         );
+
       }
 
   });
@@ -228,8 +333,10 @@ const upload =
     storage,
 
     limits: {
+
       fileSize:
         8 * 1024 * 1024
+
     },
 
     fileFilter:
@@ -264,7 +371,7 @@ const upload =
   });
 
 /* =========================================================
-   EXPRESS
+   EXPRESS MIDDLEWARE
    ========================================================= */
 
 app.use(
@@ -284,6 +391,10 @@ app.use(
   })
 );
 
+/* =========================================================
+   UPLOADS
+   ========================================================= */
+
 app.use(
   "/uploads",
   express.static(
@@ -291,17 +402,29 @@ app.use(
   )
 );
 
+/* =========================================================
+   FRONTEND
+   ========================================================= */
+
+/*
+  สำคัญมาก
+
+  ไฟล์ index.html / admin.html / app.js / style.css
+  อยู่ที่ ROOT ของโปรเจกต์
+
+  ไม่ได้อยู่ใน public/
+
+  ดังนั้นต้องใช้ ROOT ตรงนี้
+*/
+
 app.use(
   express.static(
-    path.join(
-      ROOT,
-      "public"
-    )
+    ROOT
   )
 );
 
 /* =========================================================
-   META
+   API META
    ========================================================= */
 
 app.get(
@@ -391,7 +514,9 @@ app.get(
         req.query.category
       );
 
-    /* SEARCH */
+    /* -----------------------------------------------------
+       SEARCH
+       ----------------------------------------------------- */
 
     if (q) {
 
@@ -422,7 +547,9 @@ app.get(
 
     }
 
-    /* DISTRICT */
+    /* -----------------------------------------------------
+       DISTRICT FILTER
+       ----------------------------------------------------- */
 
     if (district) {
 
@@ -436,7 +563,9 @@ app.get(
 
     }
 
-    /* CATEGORY */
+    /* -----------------------------------------------------
+       CATEGORY FILTER
+       ----------------------------------------------------- */
 
     if (category) {
 
@@ -480,7 +609,9 @@ app.get(
     const item =
       places.find(
         place =>
-          Number(place.id) === id
+          Number(
+            place.id
+          ) === id
       );
 
     if (!item) {
@@ -593,6 +724,8 @@ app.post(
           req.file
         );
 
+      /* ตรวจข้อมูลจำเป็น */
+
       if (
         !item.name ||
         !item.district
@@ -610,7 +743,7 @@ app.post(
       const places =
         readDatabase();
 
-      /* ป้องกันชื่อซ้ำในตำบลเดียวกัน */
+      /* ตรวจชื่อซ้ำ */
 
       const duplicate =
         places.some(
@@ -636,6 +769,8 @@ app.post(
           });
 
       }
+
+      /* สร้าง ID */
 
       const ids =
         places
@@ -730,7 +865,9 @@ app.put(
             ) === id
         );
 
-      if (index < 0) {
+      if (
+        index < 0
+      ) {
 
         return res
           .status(404)
@@ -750,6 +887,8 @@ app.put(
           req.file
         );
 
+      /* ตรวจข้อมูลจำเป็น */
+
       if (
         !updated.name ||
         !updated.district
@@ -764,7 +903,7 @@ app.put(
 
       }
 
-      /* ตรวจชื่อซ้ำ แต่ไม่นับตัวเอง */
+      /* ตรวจชื่อซ้ำ */
 
       const duplicate =
         places.some(
@@ -810,7 +949,9 @@ app.put(
         places
       );
 
-      /* ลบรูปเก่าหลังบันทึกสำเร็จ */
+      /* ---------------------------------------------------
+         ลบรูปเก่าหลังจากบันทึกสำเร็จ
+         --------------------------------------------------- */
 
       if (
         req.file &&
@@ -908,7 +1049,9 @@ app.delete(
             ) === id
         );
 
-      if (index < 0) {
+      if (
+        index < 0
+      ) {
 
         return res
           .status(404)
@@ -922,7 +1065,7 @@ app.delete(
       const old =
         places[index];
 
-      /* ลบจากฐานข้อมูลก่อน */
+      /* ลบจากฐานข้อมูล */
 
       places.splice(
         index,
@@ -933,7 +1076,9 @@ app.delete(
         places
       );
 
-      /* ลบรูป */
+      /* ---------------------------------------------------
+         ลบรูป
+         --------------------------------------------------- */
 
       if (
         old.image &&
@@ -1005,7 +1150,7 @@ app.delete(
 );
 
 /* =========================================================
-   EXPORT
+   EXPORT DATABASE
    ========================================================= */
 
 app.get(
@@ -1033,7 +1178,25 @@ app.get(
 );
 
 /* =========================================================
-   ERROR HANDLER
+   API 404
+   ========================================================= */
+
+app.use(
+  "/api",
+  (req, res) => {
+
+    res
+      .status(404)
+      .json({
+        error:
+          "ไม่พบ API endpoint"
+      });
+
+  }
+);
+
+/* =========================================================
+   MULTER / SERVER ERROR HANDLER
    ========================================================= */
 
 app.use(
@@ -1045,7 +1208,8 @@ app.use(
     );
 
     if (
-      error instanceof multer.MulterError
+      error instanceof
+      multer.MulterError
     ) {
 
       return res
@@ -1072,6 +1236,19 @@ app.use(
    SPA FALLBACK
    ========================================================= */
 
+/*
+  สำหรับหน้าเว็บที่ไม่ใช่ API
+
+  ตัวอย่าง:
+  /
+  /?id=1
+
+  จะส่ง index.html
+
+  แต่ /admin.html จะถูกส่งโดย
+  express.static(ROOT) โดยตรง
+*/
+
 app.get(
   "/{*splat}",
   (req, res) => {
@@ -1079,7 +1256,6 @@ app.get(
     res.sendFile(
       path.join(
         ROOT,
-        "public",
         "index.html"
       )
     );
@@ -1099,27 +1275,35 @@ app.listen(
       readDatabase();
 
     console.log("");
+
     console.log(
       "=========================================="
     );
+
     console.log(
       " Learning T-MAP จอมพระ"
     );
+
     console.log(
       "=========================================="
     );
+
     console.log(
-      ` Server: http://localhost:${PORT}`
+      ` Server Port: ${PORT}`
     );
+
     console.log(
       ` Database: ${DB_FILE}`
     );
+
     console.log(
       ` ข้อมูลปัจจุบัน: ${currentData.length} รายการ`
     );
+
     console.log(
       "=========================================="
     );
+
     console.log("");
 
   }
